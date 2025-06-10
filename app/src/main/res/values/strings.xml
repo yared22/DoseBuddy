@@ -1,0 +1,195 @@
+<resources>
+    <string name="app_name">DoseBuddy</string>
+
+    <!-- Authentication -->
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="full_name">Full Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="already_have_account">Already have an account? Login</string>
+    <string name="dont_have_account">Don\'t have an account? Register</string>
+
+    <!-- Validation Messages -->
+    <string name="error_empty_field">This field cannot be empty</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="error_password_mismatch">Passwords do not match</string>
+    <string name="error_password_too_short">Password must be at least 6 characters</string>
+    <string name="error_username_exists">Username already exists</string>
+    <string name="error_email_exists">Email already registered</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="registration_failed">Registration failed. Please try again.</string>
+
+    <!-- General -->
+    <string name="welcome_to_dosebuddy">Welcome to DoseBuddy</string>
+    <string name="your_medication_companion">Your Personal Medication Companion</string>
+
+    <!-- Medication Management -->
+    <string name="add_medication">Add Medication</string>
+    <string name="medication_name">Medication Name</string>
+    <string name="dosage">Dosage</string>
+    <string name="frequency">Frequency</string>
+    <string name="start_date">Start Date</string>
+    <string name="end_date">End Date (Optional)</string>
+    <string name="times_per_day">Times per Day</string>
+    <string name="specific_times">Specific Times</string>
+    <string name="notes">Notes (Optional)</string>
+    <string name="save_medication">Save Medication</string>
+    <string name="medication_details">Medication Details</string>
+
+    <!-- Frequency Options -->
+    <string name="once_daily">Once Daily</string>
+    <string name="twice_daily">Twice Daily</string>
+    <string name="three_times_daily">Three Times Daily</string>
+    <string name="four_times_daily">Four Times Daily</string>
+    <string name="every_other_day">Every Other Day</string>
+    <string name="weekly">Weekly</string>
+    <string name="as_needed">As Needed</string>
+    <string name="custom">Custom</string>
+
+    <!-- Medication Validation -->
+    <string name="error_medication_name_empty">Medication name cannot be empty</string>
+    <string name="error_dosage_empty">Dosage cannot be empty</string>
+    <string name="error_invalid_date">Please select a valid date</string>
+    <string name="error_end_date_before_start">End date cannot be before start date</string>
+    <string name="error_no_times_selected">Please select at least one time</string>
+    <string name="medication_saved_successfully">Medication saved successfully!</string>
+    <string name="medication_save_failed">Failed to save medication. Please try again.</string>
+
+    <!-- Time Selection -->
+    <string name="select_time">Select Time</string>
+    <string name="add_time">Add Time</string>
+    <string name="remove_time">Remove Time</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="night">Night</string>
+
+    <!-- Navigation -->
+    <string name="my_medications">My Medications</string>
+    <string name="no_medications_yet">No medications added yet</string>
+    <string name="add_your_first_medication">Add your first medication to get started</string>
+
+    <!-- Medication Dashboard -->
+    <string name="search_medications">Search medications...</string>
+    <string name="next_dose">Next dose</string>
+    <string name="today_at">Today at %s</string>
+    <string name="tomorrow_at">Tomorrow at %s</string>
+    <string name="every_day">Every day</string>
+    <string name="times_daily">%d times daily</string>
+    <string name="as_needed_short">As needed</string>
+    <string name="weekly_short">Weekly</string>
+    <string name="every_other_day_short">Every other day</string>
+    <string name="active_medications">Active Medications</string>
+    <string name="medication_count">%d medications</string>
+    <string name="edit_medication">Edit Medication</string>
+    <string name="delete_medication">Delete Medication</string>
+    <string name="mark_as_taken">Mark as Taken</string>
+    <string name="medication_taken">Medication marked as taken</string>
+    <string name="undo">Undo</string>
+
+    <!-- Empty State -->
+    <string name="empty_state_title">No medications yet</string>
+    <string name="empty_state_message">Start by adding your first medication to keep track of your doses</string>
+    <string name="get_started">Get Started</string>
+
+    <!-- Search -->
+    <string name="search_results">Search Results</string>
+    <string name="no_search_results">No medications found</string>
+    <string name="clear_search">Clear search</string>
+
+    <!-- Edit/Delete Medications -->
+    <string name="edit_medication_title">Edit Medication</string>
+    <string name="update_medication">Update Medication</string>
+    <string name="medication_updated_successfully">Medication updated successfully!</string>
+    <string name="medication_update_failed">Failed to update medication. Please try again.</string>
+    <string name="delete_medication_title">Delete Medication</string>
+    <string name="delete_medication_message">Are you sure you want to delete this medication?</string>
+    <string name="delete_medication_warning">This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="medication_deleted">Medication deleted</string>
+    <string name="medication_restored">Medication restored</string>
+    <string name="medication_delete_failed">Failed to delete medication</string>
+    <string name="confirm_delete">Confirm Delete</string>
+
+    <!-- Menu Options -->
+    <string name="edit">Edit</string>
+    <string name="delete_option">Delete</string>
+    <string name="more_options">More options</string>
+    <string name="medication_options">Medication Options</string>
+
+    <!-- Medication Reminders -->
+    <string name="medication_reminder">Medication Reminder</string>
+    <string name="time_to_take">Time to take your medication</string>
+    <string name="take_now">Take Now</string>
+    <string name="snooze">Snooze</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="snooze_5_min">Snooze 5 min</string>
+    <string name="snooze_15_min">Snooze 15 min</string>
+    <string name="snooze_30_min">Snooze 30 min</string>
+    <string name="snooze_1_hour">Snooze 1 hour</string>
+    <string name="medication_reminder_channel">Medication Reminders</string>
+    <string name="medication_reminder_channel_description">Notifications for medication reminders</string>
+    <string name="reminder_scheduled">Reminder scheduled</string>
+    <string name="reminder_cancelled">Reminder cancelled</string>
+    <string name="reminders_updated">Reminders updated</string>
+    <string name="notification_permission_required">Notification permission is required for medication reminders</string>
+    <string name="enable_notifications">Enable Notifications</string>
+
+    <!-- Notification Content -->
+    <string name="take_medication_now">Take %s now</string>
+    <string name="dosage_reminder">%s - %s</string>
+    <string name="next_dose_in">Next dose in %s</string>
+    <string name="overdue_medication">Overdue: %s</string>
+    <string name="medication_taken_notification">✓ %s taken</string>
+    <string name="snoozed_for">Snoozed for %s</string>
+
+    <!-- Medication History -->
+    <string name="medication_history">Medication History</string>
+    <string name="history">History</string>
+    <string name="adherence">Adherence</string>
+    <string name="taken_at">Taken at %s</string>
+    <string name="missed_dose">Missed dose</string>
+    <string name="on_time">On time</string>
+    <string name="late">Late</string>
+    <string name="taken_manually">Taken manually</string>
+    <string name="taken_from_reminder">Taken from reminder</string>
+    <string name="adherence_rate">Adherence Rate</string>
+    <string name="adherence_percentage">%d%% adherence</string>
+    <string name="doses_taken">Doses taken: %d of %d</string>
+    <string name="last_taken">Last taken: %s</string>
+    <string name="never_taken">Never taken</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="this_week">This week</string>
+    <string name="this_month">This month</string>
+    <string name="view_history">View History</string>
+    <string name="no_history_yet">No medication history yet</string>
+    <string name="start_taking_medication">Start taking your medication to see history here</string>
+    <string name="excellent_adherence">Excellent adherence!</string>
+    <string name="good_adherence">Good adherence</string>
+    <string name="needs_improvement">Adherence needs improvement</string>
+    <string name="mark_as_taken_manual">Mark as Taken</string>
+    <string name="when_did_you_take">When did you take this medication?</string>
+    <string name="just_now">Just now</string>
+    <string name="custom_time">Custom time</string>
+    <string name="dose_recorded">Dose recorded successfully</string>
+    <string name="dose_record_failed">Failed to record dose</string>
+
+    <!-- History Activity -->
+    <string name="medication_history_title">Medication History</string>
+    <string name="all_medications">All Medications</string>
+    <string name="filter_by_medication">Filter by medication</string>
+    <string name="taken_on">Taken on %s</string>
+    <string name="taken_at_time">at %s</string>
+    <string name="scheduled_for">Scheduled for %s</string>
+    <string name="minutes_early">%d min early</string>
+    <string name="minutes_late">%d min late</string>
+    <string name="on_time_badge">On time</string>
+    <string name="late_badge">Late</string>
+    <string name="early_badge">Early</string>
+</resources>

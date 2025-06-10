@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <!-- Medication Icon -->
+        <ImageView
+            android:id="@+id/iv_medication_icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_add"
+            android:background="#2196F3"
+            android:padding="12dp"
+            android:contentDescription="@string/medication_name"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:tint="@color/white" />
+
+        <!-- Medication Name -->
+        <TextView
+            android:id="@+id/tv_medication_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Aspirin"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toTopOf="@id/iv_medication_icon"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_icon"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_options"
+            tools:text="Aspirin Extra Strength" />
+
+        <!-- Dosage -->
+        <TextView
+            android:id="@+id/tv_dosage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="100mg"
+            android:textSize="14sp"
+            android:textColor="#666666"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/tv_medication_name"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_icon"
+            app:layout_constraintEnd_toStartOf="@id/btn_more_options"
+            tools:text="100mg • 2 tablets" />
+
+        <!-- More Options Button -->
+        <ImageButton
+            android:id="@+id/btn_more_options"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@android:drawable/ic_menu_more"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:contentDescription="More options"
+            app:layout_constraintTop_toTopOf="@id/tv_medication_name"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Frequency Info -->
+        <TextView
+            android:id="@+id/tv_frequency"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Twice daily"
+            android:textSize="12sp"
+            android:textColor="#2196F3"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintTop_toBottomOf="@id/tv_dosage"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Twice daily • Every day" />
+
+        <!-- Divider -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/iv_medication_icon"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Next Dose Section -->
+        <TextView
+            android:id="@+id/tv_next_dose_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/next_dose"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="#666666"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_next_dose_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Today at 8:00 AM"
+            android:textSize="14sp"
+            android:textColor="#2196F3"
+            android:textStyle="bold"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_next_dose_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_mark_taken"
+            tools:text="Today at 8:00 AM" />
+
+        <!-- Mark as Taken Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_mark_taken"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Take"
+            android:textSize="12sp"
+            android:minWidth="64dp"
+            app:cornerRadius="18dp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            app:layout_constraintTop_toTopOf="@id/tv_next_dose_time"
+            app:layout_constraintBottom_toBottomOf="@id/tv_next_dose_time"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Status Indicator (for overdue, upcoming, etc.) -->
+        <View
+            android:id="@+id/status_indicator"
+            android:layout_width="4dp"
+            android:layout_height="0dp"
+            android:background="#2196F3"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
