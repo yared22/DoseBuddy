@@ -3,6 +3,7 @@ package com.example.dosebuddy;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -176,6 +177,12 @@ public class EditMedicationActivity extends AppCompatActivity {
             runOnUiThread(() -> {
                 showLoading(false);
                 if (currentMedication != null) {
+                    // Security check: ensure user can only edit their own medications
+                    if (currentMedication.getUserId() != getCurrentUserId()) {
+                        Toast.makeText(this, "Access denied: This medication belongs to another user", Toast.LENGTH_SHORT).show();
+                        finish();
+                        return;
+                    }
                     populateForm();
                 } else {
                     Toast.makeText(this, "Medication not found", Toast.LENGTH_SHORT).show();
@@ -540,6 +547,32 @@ public class EditMedicationActivity extends AppCompatActivity {
         tilDosage.setError(null);
         tilTimesPerDay.setError(null);
         tilNotes.setError(null);
+    }
+
+    /**
+     * Get current user ID from SharedPreferences
+     */
+    private int getCurrentUserId() {
+        SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+
+        if (!isLoggedIn) {
+            // No user logged in, redirect to login
+            redirectToLogin();
+            return -1;
+        }
+
+        return prefs.getInt("current_user_id", -1);
+    }
+
+    /**
+     * Redirect to login activity when no user is logged in
+     */
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     /**

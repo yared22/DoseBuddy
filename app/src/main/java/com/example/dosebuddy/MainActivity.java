@@ -3,6 +3,8 @@ package com.example.dosebuddy;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -14,6 +16,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -44,6 +47,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity implements MedicationAdapter.OnMedicationClickListener {
 
     // UI Components
+    private Toolbar toolbar;
     private TextView tvWelcome, tvMedicationCount;
     private TextInputEditText etSearch;
     private RecyclerView rvMedications;
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
         setContentView(R.layout.activity_main);
 
         initializeViews();
+        setupToolbar();
         initializeDatabase();
         setupRecyclerView();
         setupClickListeners();
@@ -88,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
      * Initialize UI components
      */
     private void initializeViews() {
+        toolbar = findViewById(R.id.toolbar);
         tvWelcome = findViewById(R.id.tv_welcome);
         tvMedicationCount = findViewById(R.id.tv_medication_count);
         etSearch = findViewById(R.id.et_search);
@@ -96,6 +102,16 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
         fabAddMedication = findViewById(R.id.fab_add_medication);
         fabViewHistory = findViewById(R.id.fab_view_history);
         btnGetStarted = findViewById(R.id.btn_get_started);
+    }
+
+    /**
+     * Setup toolbar as action bar
+     */
+    private void setupToolbar() {
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false); // Hide default title since we use custom layout
+        }
     }
 
     /**
@@ -187,7 +203,69 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
      */
     private int getCurrentUserId() {
         SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
-        return prefs.getInt("current_user_id", 1); // Default to 1 for now
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+
+        if (!isLoggedIn) {
+            // No user logged in, redirect to login
+            redirectToLogin();
+            return -1;
+        }
+
+        return prefs.getInt("current_user_id", -1);
+    }
+
+    /**
+     * Redirect to login activity when no user is logged in
+     */
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            showLogoutConfirmation();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Show logout confirmation dialog
+     */
+    private void showLogoutConfirmation() {
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle(R.string.logout)
+                .setMessage(R.string.logout_confirmation)
+                .setPositiveButton(R.string.logout, (dialog, which) -> logout())
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    /**
+     * Logout user and clear session
+     */
+    private void logout() {
+        // Clear user session
+        SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.apply();
+
+        // Show success message
+        Toast.makeText(this, R.string.logout_success, Toast.LENGTH_SHORT).show();
+
+        // Redirect to login
+        redirectToLogin();
     }
 
     /**
@@ -203,6 +281,15 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
      */
     private void navigateToHistory() {
         Intent intent = new Intent(this, MedicationHistoryActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Navigate to drug information activity
+     */
+    private void navigateToDrugInfo(String drugName) {
+        Intent intent = new Intent(this, DrugInfoActivity.class);
+        intent.putExtra(DrugInfoActivity.EXTRA_DRUG_NAME, drugName);
         startActivity(intent);
     }
 
@@ -229,6 +316,11 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
     @Override
     public void onMarkTakenClick(Medication medication) {
         showMarkTakenDialog(medication);
+    }
+
+    @Override
+    public void onDrugInfoClick(Medication medication) {
+        navigateToDrugInfo(medication.getName());
     }
 
     /**

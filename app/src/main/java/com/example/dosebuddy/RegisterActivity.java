@@ -1,6 +1,7 @@
 package com.example.dosebuddy;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -135,11 +136,14 @@ public class RegisterActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     showLoading(false);
                     if (userId > 0) {
-                        Toast.makeText(this, getString(R.string.registration_successful), 
+                        // Registration successful - automatically log in the user
+                        saveUserSession((int) userId);
+
+                        Toast.makeText(this, getString(R.string.registration_successful),
                                 Toast.LENGTH_SHORT).show();
-                        navigateToLogin();
+                        navigateToMain();
                     } else {
-                        Toast.makeText(this, getString(R.string.registration_failed), 
+                        Toast.makeText(this, getString(R.string.registration_failed),
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -227,6 +231,26 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setEnabled(!show);
     }
     
+    /**
+     * Save user session to SharedPreferences
+     */
+    private void saveUserSession(int userId) {
+        SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("current_user_id", userId);
+        editor.putBoolean("is_logged_in", true);
+        editor.apply();
+    }
+
+    /**
+     * Navigate to main activity after successful registration
+     */
+    private void navigateToMain() {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     /**
      * Navigate to login activity
      */

@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
 import androidx.work.Data;
@@ -143,16 +144,32 @@ public class MedicationActionReceiver extends BroadcastReceiver {
 
                 Medication medication = medicationDao.getMedicationById(medicationId);
                 if (medication != null) {
-                    // Get user ID (simplified - in real app, get from session)
-                    int userId = 1; // TODO: Get actual user ID from session
+                    // Get user ID from SharedPreferences
+                    int userId = getCurrentUserId(context);
 
-                    MedicationHistoryManager.recordMedicationTaken(
-                        context, userId, medication, takenMethod);
+                    if (userId != -1) {
+                        MedicationHistoryManager.recordMedicationTaken(
+                            context, userId, medication, takenMethod);
+                    }
                 }
             } catch (Exception e) {
                 // Log error but don't crash
             }
         }).start();
+    }
+
+    /**
+     * Get current user ID from SharedPreferences
+     */
+    private int getCurrentUserId(Context context) {
+        SharedPreferences prefs = context.getSharedPreferences("DoseBuddy", Context.MODE_PRIVATE);
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+
+        if (!isLoggedIn) {
+            return -1; // No user logged in
+        }
+
+        return prefs.getInt("current_user_id", -1);
     }
 
     /**

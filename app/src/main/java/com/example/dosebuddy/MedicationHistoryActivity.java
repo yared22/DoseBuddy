@@ -1,5 +1,6 @@
 package com.example.dosebuddy;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -227,7 +228,25 @@ public class MedicationHistoryActivity extends AppCompatActivity {
      */
     private int getCurrentUserId() {
         SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
-        return prefs.getInt("current_user_id", 1);
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+
+        if (!isLoggedIn) {
+            // No user logged in, redirect to login
+            redirectToLogin();
+            return -1;
+        }
+
+        return prefs.getInt("current_user_id", -1);
+    }
+
+    /**
+     * Redirect to login activity when no user is logged in
+     */
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
     
     @Override

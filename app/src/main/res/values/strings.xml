@@ -192,4 +192,9 @@
     <string name="on_time_badge">On time</string>
     <string name="late_badge">Late</string>
     <string name="early_badge">Early</string>
+
+    <!-- User Session -->
+    <string name="logout">Logout</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+    <string name="logout_success">Logged out successfully</string>
 </resources>

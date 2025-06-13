@@ -1,6 +1,7 @@
 package com.example.dosebuddy;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -42,8 +43,15 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Check if user is already logged in
+        if (isUserLoggedIn()) {
+            navigateToMain();
+            return;
+        }
+
         setContentView(R.layout.activity_login);
-        
+
         initializeViews();
         initializeDatabase();
         setupClickListeners();
@@ -101,7 +109,9 @@ public class LoginActivity extends AppCompatActivity {
                 User user = userDao.getUserByUsername(username);
                 
                 if (user != null && PasswordUtils.verifyPassword(password, user.getPasswordHash())) {
-                    // Login successful
+                    // Login successful - save user session
+                    saveUserSession(user.getId());
+
                     runOnUiThread(() -> {
                         showLoading(false);
                         Toast.makeText(this, "Login successful!", Toast.LENGTH_SHORT).show();
@@ -178,6 +188,25 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
     
+    /**
+     * Check if user is already logged in
+     */
+    private boolean isUserLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
+        return prefs.getBoolean("is_logged_in", false);
+    }
+
+    /**
+     * Save user session to SharedPreferences
+     */
+    private void saveUserSession(int userId) {
+        SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("current_user_id", userId);
+        editor.putBoolean("is_logged_in", true);
+        editor.apply();
+    }
+
     /**
      * Navigate to main activity after successful login
      */

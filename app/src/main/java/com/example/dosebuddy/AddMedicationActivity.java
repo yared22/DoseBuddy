@@ -215,11 +215,28 @@ public class AddMedicationActivity extends AppCompatActivity {
     
     /**
      * Get current user ID from SharedPreferences
-     * TODO: Implement proper session management
      */
     private int getCurrentUserId() {
         SharedPreferences prefs = getSharedPreferences("DoseBuddy", MODE_PRIVATE);
-        return prefs.getInt("current_user_id", 1); // Default to 1 for now
+        boolean isLoggedIn = prefs.getBoolean("is_logged_in", false);
+
+        if (!isLoggedIn) {
+            // No user logged in, redirect to login
+            redirectToLogin();
+            return -1;
+        }
+
+        return prefs.getInt("current_user_id", -1);
+    }
+
+    /**
+     * Redirect to login activity when no user is logged in
+     */
+    private void redirectToLogin() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     /**

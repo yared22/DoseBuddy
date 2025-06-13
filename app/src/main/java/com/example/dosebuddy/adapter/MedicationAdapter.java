@@ -35,6 +35,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         void onMedicationLongClick(Medication medication);
         void onMoreOptionsClick(Medication medication, View view);
         void onMarkTakenClick(Medication medication);
+        void onDrugInfoClick(Medication medication);
     }
     
     public MedicationAdapter(Context context) {
@@ -97,6 +98,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         private TextView tvFrequency;
         private TextView tvNextDoseTime;
         private MaterialButton btnMarkTaken;
+        private MaterialButton btnDrugInfo;
         private ImageButton btnMoreOptions;
         private View statusIndicator;
         
@@ -109,6 +111,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             tvFrequency = itemView.findViewById(R.id.tv_frequency);
             tvNextDoseTime = itemView.findViewById(R.id.tv_next_dose_time);
             btnMarkTaken = itemView.findViewById(R.id.btn_mark_taken);
+            btnDrugInfo = itemView.findViewById(R.id.btn_drug_info);
             btnMoreOptions = itemView.findViewById(R.id.btn_more_options);
             statusIndicator = itemView.findViewById(R.id.status_indicator);
             
@@ -147,6 +150,15 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
                         listener.onMarkTakenClick(filteredMedications.get(position));
+                    }
+                }
+            });
+
+            btnDrugInfo.setOnClickListener(v -> {
+                if (listener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onDrugInfoClick(filteredMedications.get(position));
                     }
                 }
             });

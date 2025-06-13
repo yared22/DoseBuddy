@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Permission for internet access (API calls) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -57,6 +60,13 @@
         <!-- Medication History Activity -->
         <activity
             android:name=".MedicationHistoryActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoseBuddy"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- Drug Information Activity -->
+        <activity
+            android:name=".DrugInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.DoseBuddy"
             android:parentActivityName=".MainActivity" />
