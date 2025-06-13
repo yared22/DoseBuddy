@@ -108,7 +108,7 @@ public class DrugInfoActivity extends AppCompatActivity {
                         if (drugInfoList != null && !drugInfoList.isEmpty()) {
                             displayDrugInfo(drugInfoList.get(0)); // Show first result
                         } else {
-                            // Show sample data for common medications
+                            // No results found from API
                             showNoDrugInfo();
                         }
                     } catch (Exception e) {
@@ -121,7 +121,22 @@ public class DrugInfoActivity extends AppCompatActivity {
             public void onError(String errorMessage) {
                 runOnUiThread(() -> {
                     showLoading(false);
-                    showError(errorMessage);
+
+                    // Provide more specific error messages
+                    String specificError = errorMessage;
+                    if (errorMessage != null) {
+                        if (errorMessage.contains("UnknownHostException") || errorMessage.contains("ConnectException")) {
+                            specificError = "No internet connection available. Please check your network connection and try again.";
+                        } else if (errorMessage.contains("SocketTimeoutException")) {
+                            specificError = "Request timed out. The FDA API service may be slow or unavailable. Please try again later.";
+                        } else if (errorMessage.contains("HTTP 404")) {
+                            specificError = "Drug information not found in the FDA database for '" + drugName + "'.";
+                        } else if (errorMessage.contains("HTTP 500")) {
+                            specificError = "FDA API service is currently experiencing issues. Please try again later.";
+                        }
+                    }
+
+                    showError(specificError);
                 });
             }
         });
@@ -273,68 +288,12 @@ public class DrugInfoActivity extends AppCompatActivity {
      * Show no drug info message
      */
     private void showNoDrugInfo() {
-        // For testing purposes, show sample data for common medications
-        if (drugName.toLowerCase().contains("paracetamol") || drugName.toLowerCase().contains("acetaminophen")) {
-            showSampleDrugInfo("Acetaminophen (Paracetamol)");
-        } else if (drugName.toLowerCase().contains("aspirin")) {
-            showSampleDrugInfo("Aspirin");
-        } else if (drugName.toLowerCase().contains("ibuprofen")) {
-            showSampleDrugInfo("Ibuprofen");
-        } else {
-            contentLayout.setVisibility(View.GONE);
-            tvNoDrugInfo.setVisibility(View.VISIBLE);
-            tvNoDrugInfo.setText("No information found for '" + drugName + "'.\n\nThis might be because:\n• The drug name is misspelled\n• It's not in the FDA database\n• It's a very new medication\n\nNote: This is a demo version showing sample data for common medications.");
-        }
+        contentLayout.setVisibility(View.GONE);
+        tvNoDrugInfo.setVisibility(View.VISIBLE);
+        tvNoDrugInfo.setText("No information found for '" + drugName + "'.\n\nThis might be because:\n• The drug name is misspelled\n• It's not in the FDA database\n• It's a very new medication\n• The API service is currently unavailable\n\nPlease check the spelling and try again, or consult your healthcare provider for accurate medication information.");
     }
 
-    /**
-     * Show sample drug information for testing
-     */
-    private void showSampleDrugInfo(String drugType) {
-        try {
-            contentLayout.removeAllViews();
-            contentLayout.setVisibility(View.VISIBLE);
-            tvNoDrugInfo.setVisibility(View.GONE);
 
-            switch (drugType) {
-                case "Acetaminophen (Paracetamol)":
-                    addInfoCard("Basic Information", "Brand Name: Tylenol\nGeneric Name: Acetaminophen\nActive Ingredient: Acetaminophen");
-                    addInfoCard("Purpose", "Pain reliever and fever reducer");
-                    addInfoCard("Dosage & Administration", "Adults: 325-650 mg every 4-6 hours as needed. Do not exceed 3000 mg in 24 hours.");
-                    addInfoCard("⚠️ Warnings", "• Do not exceed recommended dose\n• Severe liver damage may occur if you take more than directed\n• Do not use with other products containing acetaminophen");
-                    addInfoCard("Side Effects", "• Rare at recommended doses\n• Liver damage with overdose\n• Allergic reactions (rare)");
-                    break;
-
-                case "Aspirin":
-                    addInfoCard("Basic Information", "Brand Name: Bayer Aspirin\nGeneric Name: Aspirin\nActive Ingredient: Acetylsalicylic Acid");
-                    addInfoCard("Purpose", "Pain reliever, fever reducer, and anti-inflammatory");
-                    addInfoCard("Dosage & Administration", "Adults: 325-650 mg every 4 hours as needed for pain/fever. For heart protection: 81 mg daily as directed by doctor.");
-                    addInfoCard("⚠️ Warnings", "• May cause stomach bleeding\n• Do not give to children under 12\n• Consult doctor if taking blood thinners\n• Stop use if ringing in ears occurs");
-                    addInfoCard("Side Effects", "• Stomach upset or bleeding\n• Heartburn\n• Nausea\n• Ringing in ears (with high doses)");
-                    break;
-
-                case "Ibuprofen":
-                    addInfoCard("Basic Information", "Brand Name: Advil, Motrin\nGeneric Name: Ibuprofen\nActive Ingredient: Ibuprofen");
-                    addInfoCard("Purpose", "Pain reliever, fever reducer, and anti-inflammatory");
-                    addInfoCard("Dosage & Administration", "Adults: 200-400 mg every 4-6 hours as needed. Do not exceed 1200 mg in 24 hours unless directed by doctor.");
-                    addInfoCard("⚠️ Warnings", "• May cause stomach bleeding\n• Increased risk of heart attack or stroke\n• Do not use if allergic to aspirin\n• Consult doctor if taking blood pressure medications");
-                    addInfoCard("Side Effects", "• Stomach upset\n• Heartburn\n• Dizziness\n• Headache\n• Fluid retention");
-                    break;
-            }
-
-            // Add note about sample data
-            TextView noteView = new TextView(this);
-            noteView.setText("\n📝 Note: This is sample information for demonstration purposes. Always consult your healthcare provider or pharmacist for accurate medication information.");
-            noteView.setTextSize(12);
-            noteView.setTextColor(getResources().getColor(android.R.color.darker_gray, null));
-            noteView.setPadding(16, 16, 16, 16);
-            noteView.setBackgroundColor(0xFFF5F5F5);
-            contentLayout.addView(noteView);
-
-        } catch (Exception e) {
-            showError("Error displaying sample information: " + e.getMessage());
-        }
-    }
 
     /**
      * Show error message
