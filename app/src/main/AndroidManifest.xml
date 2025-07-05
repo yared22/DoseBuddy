@@ -7,6 +7,9 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Permission for vibration -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <!-- Permission for internet access (API calls) -->
     <uses-permission android:name="android.permission.INTERNET" />
 

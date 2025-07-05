@@ -1,11 +1,17 @@
 package com.example.dosebuddy.workers;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.media.AudioAttributes;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -86,9 +92,25 @@ public class MedicationReminderWorker extends Worker {
                     NotificationManager.IMPORTANCE_HIGH
             );
             channel.setDescription(getApplicationContext().getString(R.string.medication_reminder_channel_description));
+
+            // Enhanced vibration pattern
             channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{0, 500, 200, 500, 200, 500}); // Custom vibration pattern
+
+            // Set notification sound
+            Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .setUsage(AudioAttributes.USAGE_NOTIFICATION_RINGTONE)
+                    .build();
+            channel.setSound(soundUri, audioAttributes);
+
+            // Additional settings
             channel.setShowBadge(true);
-            
+            channel.enableLights(true);
+            channel.setLightColor(getApplicationContext().getColor(R.color.primary));
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+
             NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
             if (notificationManager != null) {
                 notificationManager.createNotificationChannel(channel);
@@ -145,13 +167,42 @@ public class MedicationReminderWorker extends Worker {
                 .setContentIntent(openAppPendingIntent)
                 .addAction(R.drawable.ic_check, context.getString(R.string.take_now), takeNowPendingIntent)
                 .addAction(R.drawable.ic_snooze, context.getString(R.string.snooze), snoozePendingIntent)
-                .setDefaults(NotificationCompat.DEFAULT_ALL);
+                .setDefaults(NotificationCompat.DEFAULT_SOUND | NotificationCompat.DEFAULT_LIGHTS)
+                .setVibrate(new long[]{0, 500, 200, 500, 200, 500}) // Custom vibration pattern
+                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                .setFullScreenIntent(openAppPendingIntent, false) // Show heads-up notification
+                .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                .setOngoing(false)
+                .setTimeoutAfter(30 * 60 * 1000); // Auto-dismiss after 30 minutes
         
         // Show notification
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (notificationManager != null) {
             int notificationId = NOTIFICATION_ID_BASE + medicationId;
             notificationManager.notify(notificationId, builder.build());
+
+            // Trigger additional vibration for older Android versions
+            triggerVibration(context);
+        }
+    }
+
+    /**
+     * Trigger vibration for medication reminder
+     */
+    private void triggerVibration(Context context) {
+        Vibrator vibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+        if (vibrator != null && vibrator.hasVibrator()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                // For Android 8.0+ use VibrationEffect
+                VibrationEffect effect = VibrationEffect.createWaveform(
+                        new long[]{0, 500, 200, 500, 200, 500}, // Pattern: wait, vibrate, wait, vibrate...
+                        -1 // Don't repeat
+                );
+                vibrator.vibrate(effect);
+            } else {
+                // For older versions use deprecated method
+                vibrator.vibrate(new long[]{0, 500, 200, 500, 200, 500}, -1);
+            }
         }
     }
 }

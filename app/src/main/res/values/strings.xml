@@ -133,7 +133,7 @@
     <string name="snooze_30_min">Snooze 30 min</string>
     <string name="snooze_1_hour">Snooze 1 hour</string>
     <string name="medication_reminder_channel">Medication Reminders</string>
-    <string name="medication_reminder_channel_description">Notifications for medication reminders</string>
+    <string name="medication_reminder_channel_description">Notifications for medication reminders with sound and vibration</string>
     <string name="reminder_scheduled">Reminder scheduled</string>
     <string name="reminder_cancelled">Reminder cancelled</string>
     <string name="reminders_updated">Reminders updated</string>
