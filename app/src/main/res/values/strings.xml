@@ -85,7 +85,6 @@
     <string name="every_other_day_short">Every other day</string>
     <string name="active_medications">Active Medications</string>
     <string name="medication_count">%d medications</string>
-    <string name="edit_medication">Edit Medication</string>
     <string name="delete_medication">Delete Medication</string>
     <string name="mark_as_taken">Mark as Taken</string>
     <string name="medication_taken">Medication marked as taken</string>
@@ -101,11 +100,7 @@
     <string name="no_search_results">No medications found</string>
     <string name="clear_search">Clear search</string>
 
-    <!-- Edit/Delete Medications -->
-    <string name="edit_medication_title">Edit Medication</string>
-    <string name="update_medication">Update Medication</string>
-    <string name="medication_updated_successfully">Medication updated successfully!</string>
-    <string name="medication_update_failed">Failed to update medication. Please try again.</string>
+    <!-- Delete Medications -->
     <string name="delete_medication_title">Delete Medication</string>
     <string name="delete_medication_message">Are you sure you want to delete this medication?</string>
     <string name="delete_medication_warning">This action cannot be undone.</string>
@@ -117,7 +112,6 @@
     <string name="confirm_delete">Confirm Delete</string>
 
     <!-- Menu Options -->
-    <string name="edit">Edit</string>
     <string name="delete_option">Delete</string>
     <string name="more_options">More options</string>
     <string name="medication_options">Medication Options</string>

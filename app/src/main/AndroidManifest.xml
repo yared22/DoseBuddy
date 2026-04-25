@@ -53,13 +53,6 @@
             android:theme="@style/Theme.DoseBuddy"
             android:parentActivityName=".MainActivity" />
 
-        <!-- Edit Medication Activity -->
-        <activity
-            android:name=".EditMedicationActivity"
-            android:exported="false"
-            android:theme="@style/Theme.DoseBuddy"
-            android:parentActivityName=".MainActivity" />
-
         <!-- Medication History Activity -->
         <activity
             android:name=".MedicationHistoryActivity"

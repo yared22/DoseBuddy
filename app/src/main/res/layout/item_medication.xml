@@ -78,63 +78,70 @@
             app:layout_constraintEnd_toEndOf="parent" />
 
         <!-- Frequency Info -->
+
+        <!-- Divider -->
+
+        <!-- Next Dose Section -->
         <TextView
             android:id="@+id/tv_frequency"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Twice daily"
-            android:textSize="12sp"
-            android:textColor="#2196F3"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            android:maxLines="1"
             android:ellipsize="end"
-            app:layout_constraintTop_toBottomOf="@id/tv_dosage"
-            app:layout_constraintStart_toEndOf="@id/iv_medication_icon"
+            android:maxLines="1"
+            android:text="Twice daily"
+            android:textColor="#2196F3"
+            android:textSize="12sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/iv_medication_icon"
+            app:layout_constraintTop_toBottomOf="@id/tv_dosage"
             tools:text="Twice daily • Every day" />
 
-        <!-- Divider -->
         <View
             android:id="@+id/divider"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginTop="4dp"
             android:background="#E0E0E0"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/iv_medication_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/iv_medication_icon" />
 
-        <!-- Next Dose Section -->
+        <!-- Drug Info Button -->
+
         <TextView
             android:id="@+id/tv_next_dose_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="56dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/next_dose"
+            android:textColor="#666666"
             android:textSize="12sp"
             android:textStyle="bold"
-            android:textColor="#666666"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@id/divider"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/divider" />
 
         <TextView
             android:id="@+id/tv_next_dose_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="Today at 8:00 AM"
-            android:textSize="14sp"
-            android:textColor="#2196F3"
-            android:textStyle="bold"
+            android:layout_width="134dp"
+            android:layout_height="22dp"
             android:layout_marginTop="4dp"
             android:layout_marginEnd="8dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_next_dose_label"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="Today at 8:00 AM"
+            android:textColor="#2196F3"
+            android:textSize="14sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@id/btn_drug_info"
+            app:layout_constraintHorizontal_bias="0.114"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_next_dose_label"
             tools:text="Today at 8:00 AM" />
 
-        <!-- Drug Info Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_drug_info"
             android:layout_width="wrap_content"
@@ -171,7 +178,8 @@
             android:id="@+id/status_indicator"
             android:layout_width="4dp"
             android:layout_height="0dp"
-            android:background="#2196F3"
+            android:background="@android:color/transparent"
+            android:visibility="gone"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

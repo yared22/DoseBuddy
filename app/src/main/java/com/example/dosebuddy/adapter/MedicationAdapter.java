@@ -234,8 +234,9 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         private void updateStatusIndicator(Medication medication) {
             // Set status indicator color based on medication status
             // Green: On time, Yellow: Due soon, Red: Overdue
-            // For now, default to primary color
-            statusIndicator.setBackgroundColor(0xFF2196F3); // Blue color
+            // For now, default to transparent and hidden
+            statusIndicator.setBackgroundColor(android.graphics.Color.TRANSPARENT);
+            statusIndicator.setVisibility(View.GONE);
         }
         
         private void updateMarkTakenButton(Medication medication) {

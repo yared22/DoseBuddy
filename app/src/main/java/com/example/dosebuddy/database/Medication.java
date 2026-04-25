@@ -54,6 +54,9 @@ public class Medication {
     @ColumnInfo(name = "notes")
     private String notes;
     
+    @ColumnInfo(name = "description")
+    private String description;
+    
     @ColumnInfo(name = "is_active")
     private boolean isActive;
     
@@ -177,6 +180,14 @@ public class Medication {
     
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+    
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
     
     public boolean isActive() {

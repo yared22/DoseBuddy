@@ -47,13 +47,13 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity implements MedicationAdapter.OnMedicationClickListener {
 
     // UI Components
-    private Toolbar toolbar;
     private TextView tvWelcome, tvMedicationCount;
     private TextInputEditText etSearch;
     private RecyclerView rvMedications;
     private LinearLayout llEmptyState;
     private FloatingActionButton fabAddMedication, fabViewHistory;
     private MaterialButton btnGetStarted;
+    private View btnMainMenu;
 
     // Data and Database
     private MedicationAdapter medicationAdapter;
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
         setContentView(R.layout.activity_main);
 
         initializeViews();
-        setupToolbar();
         initializeDatabase();
         setupRecyclerView();
         setupClickListeners();
@@ -93,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
      * Initialize UI components
      */
     private void initializeViews() {
-        toolbar = findViewById(R.id.toolbar);
         tvWelcome = findViewById(R.id.tv_welcome);
         tvMedicationCount = findViewById(R.id.tv_medication_count);
         etSearch = findViewById(R.id.et_search);
@@ -102,16 +100,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
         fabAddMedication = findViewById(R.id.fab_add_medication);
         fabViewHistory = findViewById(R.id.fab_view_history);
         btnGetStarted = findViewById(R.id.btn_get_started);
-    }
-
-    /**
-     * Setup toolbar as action bar
-     */
-    private void setupToolbar() {
-        setSupportActionBar(toolbar);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayShowTitleEnabled(false); // Hide default title since we use custom layout
-        }
+        btnMainMenu = findViewById(R.id.btn_main_menu);
     }
 
     /**
@@ -142,6 +131,23 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
         fabAddMedication.setOnClickListener(v -> navigateToAddMedication());
         fabViewHistory.setOnClickListener(v -> navigateToHistory());
         btnGetStarted.setOnClickListener(v -> navigateToAddMedication());
+        btnMainMenu.setOnClickListener(this::showMainMenu);
+    }
+
+    /**
+     * Show main app menu
+     */
+    private void showMainMenu(View v) {
+        PopupMenu popupMenu = new PopupMenu(this, v);
+        popupMenu.getMenuInflater().inflate(R.menu.main_menu, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.action_logout) {
+                showLogoutConfirmation();
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     /**
@@ -297,8 +303,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
 
     @Override
     public void onMedicationClick(Medication medication) {
-        // Navigate to edit medication
-        navigateToEditMedication(medication.getId());
+        // Do nothing or navigate to drug info? Since edit is removed, we'll just do nothing.
     }
 
     @Override
@@ -324,16 +329,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
     }
 
     /**
-     * Navigate to Edit Medication activity
-     */
-    private void navigateToEditMedication(int medicationId) {
-        Intent intent = new Intent(this, EditMedicationActivity.class);
-        intent.putExtra(EditMedicationActivity.EXTRA_MEDICATION_ID, medicationId);
-        startActivity(intent);
-    }
-
-    /**
-     * Show medication options menu (edit/delete)
+     * Show medication options menu (delete)
      */
     private void showMedicationOptionsMenu(Medication medication, View anchorView) {
         if (anchorView != null) {
@@ -343,10 +339,7 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
 
             popupMenu.setOnMenuItemClickListener(item -> {
                 int itemId = item.getItemId();
-                if (itemId == R.id.action_edit) {
-                    navigateToEditMedication(medication.getId());
-                    return true;
-                } else if (itemId == R.id.action_delete) {
+                if (itemId == R.id.action_delete) {
                     showDeleteConfirmationDialog(medication);
                     return true;
                 }
@@ -364,18 +357,13 @@ public class MainActivity extends AppCompatActivity implements MedicationAdapter
      * Show medication options dialog
      */
     private void showMedicationOptionsDialog(Medication medication) {
-        String[] options = {getString(R.string.edit), getString(R.string.delete_option)};
+        String[] options = {getString(R.string.delete_option)};
 
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.medication_options))
                 .setItems(options, (dialog, which) -> {
-                    switch (which) {
-                        case 0: // Edit
-                            navigateToEditMedication(medication.getId());
-                            break;
-                        case 1: // Delete
-                            showDeleteConfirmationDialog(medication);
-                            break;
+                    if (which == 0) { // Delete
+                        showDeleteConfirmationDialog(medication);
                     }
                 })
                 .show();

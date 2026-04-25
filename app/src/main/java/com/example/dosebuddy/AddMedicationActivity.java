@@ -5,17 +5,25 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.dosebuddy.api.GeminiService;
+import com.example.dosebuddy.api.RxNormService;
 import com.example.dosebuddy.database.AppDatabase;
 import com.example.dosebuddy.database.Medication;
 import com.example.dosebuddy.database.MedicationDao;
@@ -40,12 +48,19 @@ import java.util.concurrent.Executors;
 public class AddMedicationActivity extends AppCompatActivity {
     
     // UI Components
-    private TextInputLayout tilMedicationName, tilDosage, tilTimesPerDay, tilNotes;
-    private TextInputEditText etMedicationName, etDosage, etTimesPerDay, etNotes;
+    private TextInputLayout tilMedicationName, tilDosage, tilDescription, tilTimesPerDay, tilNotes;
+    private TextInputEditText etDosage, etDescription, etTimesPerDay, etNotes;
+    private AutoCompleteTextView etMedicationName;
     private Spinner spinnerFrequency;
     private MaterialButton btnStartDate, btnEndDate, btnAddTime, btnSaveMedication;
     private LinearLayout llTimesContainer;
     private ProgressBar progressBar;
+    
+    // Services
+    private RxNormService rxNormService;
+    private GeminiService geminiService;
+    private Handler searchHandler = new Handler(Looper.getMainLooper());
+    private Runnable searchRunnable;
     
     // Data
     private AppDatabase database;
@@ -78,11 +93,13 @@ public class AddMedicationActivity extends AppCompatActivity {
     private void initializeViews() {
         tilMedicationName = findViewById(R.id.til_medication_name);
         tilDosage = findViewById(R.id.til_dosage);
+        tilDescription = findViewById(R.id.til_description);
         tilTimesPerDay = findViewById(R.id.til_times_per_day);
         tilNotes = findViewById(R.id.til_notes);
         
         etMedicationName = findViewById(R.id.et_medication_name);
         etDosage = findViewById(R.id.et_dosage);
+        etDescription = findViewById(R.id.et_description);
         etTimesPerDay = findViewById(R.id.et_times_per_day);
         etNotes = findViewById(R.id.et_notes);
         
@@ -115,8 +132,87 @@ public class AddMedicationActivity extends AppCompatActivity {
         selectedEndDate = null;
         selectedFrequency = MedicationFrequency.ONCE_DAILY;
         
+        rxNormService = new RxNormService();
+        geminiService = new GeminiService();
+        
+        setupMedicationSearch();
+        
         // Get current user ID from SharedPreferences (you'll need to implement this)
         currentUserId = getCurrentUserId();
+    }
+    
+    /**
+     * Setup medication name autocomplete search with debouncing
+     */
+    private void setupMedicationSearch() {
+        etMedicationName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (searchRunnable != null) {
+                    searchHandler.removeCallbacks(searchRunnable);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String query = s.toString().trim();
+                if (query.length() >= 2) {
+                    searchRunnable = () -> performSearch(query);
+                    searchHandler.postDelayed(searchRunnable, 500); // 500ms debounce
+                }
+            }
+        });
+
+        etMedicationName.setOnItemClickListener((parent, view, position, id) -> {
+            RxNormService.DrugSuggestion suggestion = (RxNormService.DrugSuggestion) parent.getItemAtPosition(position);
+            handleDrugSelection(suggestion);
+        });
+    }
+
+    private void performSearch(String query) {
+        rxNormService.searchDrugs(query, new RxNormService.RxNormCallback() {
+            @Override
+            public void onSuggestionsReceived(List<RxNormService.DrugSuggestion> suggestions) {
+                ArrayAdapter<RxNormService.DrugSuggestion> adapter = new ArrayAdapter<>(
+                        AddMedicationActivity.this,
+                        android.R.layout.simple_dropdown_item_1line,
+                        suggestions
+                );
+                etMedicationName.setAdapter(adapter);
+                etMedicationName.showDropDown();
+            }
+
+            @Override
+            public void onError(String message) {
+                // Silently fail or log, RxNorm failure allows manual entry
+            }
+        });
+    }
+
+    private void handleDrugSelection(RxNormService.DrugSuggestion suggestion) {
+        etMedicationName.setText(suggestion.name);
+        if (!suggestion.strengths.isEmpty()) {
+            etDosage.setText(suggestion.strengths.get(0));
+        }
+
+        // Fetch AI description
+        showLoading(true);
+        geminiService.generateDescription(suggestion.name, new GeminiService.GeminiCallback() {
+            @Override
+            public void onResponse(String description) {
+                showLoading(false);
+                etDescription.setText(description);
+            }
+
+            @Override
+            public void onError(String message) {
+                showLoading(false);
+                // AI failure allows saving without description
+            }
+        });
     }
     
     /**
@@ -124,8 +220,28 @@ public class AddMedicationActivity extends AppCompatActivity {
      */
     private void setupFrequencySpinner() {
         String[] frequencyNames = MedicationFrequency.getDisplayNames();
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, 
-                android.R.layout.simple_spinner_item, frequencyNames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, frequencyNames) {
+            @NonNull
+            @Override
+            public View getView(int position, @androidx.annotation.Nullable View convertView, @NonNull android.view.ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (v instanceof TextView) {
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.md_theme_light_primary, getTheme()));
+                }
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, @androidx.annotation.Nullable View convertView, @NonNull android.view.ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                if (v instanceof TextView) {
+                    // Set ALL items in the dropdown to the purple color
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.md_theme_light_primary, getTheme()));
+                }
+                return v;
+            }
+        };
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerFrequency.setAdapter(adapter);
         
@@ -381,6 +497,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         // Get input values
         String medicationName = etMedicationName.getText().toString().trim();
         String dosage = etDosage.getText().toString().trim();
+        String description = etDescription.getText().toString().trim();
         String notes = etNotes.getText().toString().trim();
 
         int timesPerDay;
@@ -394,6 +511,7 @@ public class AddMedicationActivity extends AppCompatActivity {
         Medication medication = new Medication(currentUserId, medicationName, dosage,
                 selectedFrequency, timesPerDay, selectedStartDate);
         medication.setEndDate(selectedEndDate);
+        medication.setDescription(description.isEmpty() ? null : description);
         medication.setNotes(notes.isEmpty() ? null : notes);
 
         // Convert selected times to JSON string

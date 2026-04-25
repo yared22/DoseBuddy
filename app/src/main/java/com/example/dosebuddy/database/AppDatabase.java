@@ -12,7 +12,7 @@ import androidx.room.RoomDatabase;
  */
 @Database(
     entities = {User.class, Medication.class, MedicationHistory.class},
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 public abstract class AppDatabase extends RoomDatabase {

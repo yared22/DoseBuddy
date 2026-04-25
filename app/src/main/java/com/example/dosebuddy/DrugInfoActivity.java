@@ -249,7 +249,7 @@ public class DrugInfoActivity extends AppCompatActivity {
             TextView titleView = new TextView(this);
             titleView.setText(title);
             titleView.setTextSize(18);
-            titleView.setTextColor(getResources().getColor(android.R.color.black, null));
+            titleView.setTextColor(getResources().getColor(android.R.color.white, null));
             titleView.setTypeface(null, android.graphics.Typeface.BOLD);
             titleView.setPadding(0, 0, 0, 16);
 
@@ -257,7 +257,7 @@ public class DrugInfoActivity extends AppCompatActivity {
             TextView contentView = new TextView(this);
             contentView.setText(content);
             contentView.setTextSize(14);
-            contentView.setTextColor(getResources().getColor(android.R.color.black, null));
+            contentView.setTextColor(getResources().getColor(android.R.color.white, null));
             contentView.setLineSpacing(4, 1.2f);
 
             cardContent.addView(titleView);

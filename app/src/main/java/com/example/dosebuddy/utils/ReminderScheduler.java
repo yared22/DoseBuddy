@@ -197,11 +197,4 @@ public class ReminderScheduler {
         return SNOOZE_TAG_PREFIX + medicationId;
     }
     
-    /**
-     * Reschedule all reminders for a medication (useful after editing)
-     */
-    public static void rescheduleMedicationReminders(Context context, Medication medication) {
-        Log.d(TAG, "Rescheduling reminders for: " + medication.getName());
-        scheduleMedicationReminders(context, medication);
-    }
 }

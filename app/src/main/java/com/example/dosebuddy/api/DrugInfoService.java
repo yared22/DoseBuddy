@@ -70,7 +70,7 @@ public class DrugInfoService {
             String encodedDrugName = URLEncoder.encode(cleanDrugName, "UTF-8");
 
             // Build the API URL with more flexible search
-            // Search in brand names, generic names, and active ingredients
+            // search in brand names, generic names, and active ingredients
             String url = BASE_URL + "?search=(openfda.brand_name:" + encodedDrugName + "+OR+openfda.generic_name:" + encodedDrugName + "+OR+active_ingredient:" + encodedDrugName + ")&limit=5";
 
             Log.d(TAG, "Making API request to: " + url);

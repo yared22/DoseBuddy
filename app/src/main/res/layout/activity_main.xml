@@ -5,25 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
     tools:context=".MainActivity">
 
-    <!-- App Bar Layout -->
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#2196F3"
-            app:title="@string/my_medications"
-            app:titleTextColor="@color/white" />
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <!-- Removed AppBarLayout/Toolbar as we're integrating the menu into the header -->
 
     <!-- Main Content -->
     <androidx.core.widget.NestedScrollView
@@ -37,34 +22,55 @@
             android:orientation="vertical">
 
             <!-- Header Section -->
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:background="#2196F3">
+                android:padding="24dp"
+                android:background="?attr/colorPrimary">
 
-                <!-- Welcome Message -->
-                <TextView
-                    android:id="@+id/tv_welcome"
+                <!-- Welcome Message Container -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome back!"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/white" />
+                    android:orientation="vertical"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/btn_main_menu">
 
-                <!-- Medication Count -->
-                <TextView
-                    android:id="@+id/tv_medication_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0 medications"
-                    android:textSize="14sp"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="4dp" />
+                    <TextView
+                        android:id="@+id/tv_welcome"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Welcome back!"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/white" />
 
-            </LinearLayout>
+                    <!-- Medication Count -->
+                    <TextView
+                        android:id="@+id/tv_medication_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0 medications"
+                        android:textSize="15sp"
+                        android:textColor="@color/white"
+                        android:layout_marginTop="4dp"
+                        android:alpha="0.9" />
+                </LinearLayout>
+
+                <!-- Integrated 3-dots Menu Button -->
+                <ImageButton
+                    android:id="@+id/btn_main_menu"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@android:drawable/ic_menu_more"
+                    android:background="?android:attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Menu"
+                    app:tint="@color/white" />
+
+            </RelativeLayout>
 
             <!-- Search Bar -->
             <com.google.android.material.textfield.TextInputLayout
@@ -121,7 +127,7 @@
                     android:text="@string/empty_state_title"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="#000000"
+                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginBottom="8dp" />
 
                 <TextView
@@ -129,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/empty_state_message"
                     android:textSize="14sp"
-                    android:textColor="#666666"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:gravity="center"
                     android:layout_marginBottom="24dp" />
 
@@ -166,10 +172,10 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="80dp"
-        android:backgroundTint="@color/primary_dark"
+        android:backgroundTint="?attr/colorSecondary"
         android:src="@drawable/ic_history"
         android:contentDescription="@string/view_history"
-        app:tint="@color/black"
+        app:tint="?attr/colorOnSecondary"
         app:fabSize="mini" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
